@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\TeamMember;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 class TeamMemberController extends Controller
 {
@@ -39,7 +39,34 @@ class TeamMemberController extends Controller
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('photo')) {
-            $data['photo_path'] = $request->file('photo')->store('images/team', 'public_direct');
+            $file = $request->file('photo');
+            $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+        
+            $fileStream = fopen($file->getRealPath(), 'r');
+        
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . env('SUPABASE_KEY'),
+                    'apikey' => env('SUPABASE_KEY'),
+                    'Content-Type' => $file->getMimeType(),
+                ])
+                ->withBody(file_get_contents($file->getRealPath()), $file->getMimeType())
+                ->put(env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_BUCKET') . '/' . $fileName);
+
+        
+            fclose($fileStream);
+        
+            if ($response->failed()) {
+                \Log::error('Supabase upload gagal', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+                throw new \Exception('Upload ke Supabase gagal. Cek log untuk detail.');
+            }
+        
+            $data['photo_path'] = env('SUPABASE_URL')
+                . '/storage/v1/object/public/' . env('SUPABASE_BUCKET')
+                . '/' . $fileName;
         }
 
         TeamMember::create($data);
