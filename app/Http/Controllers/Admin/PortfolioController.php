@@ -76,7 +76,7 @@ class PortfolioController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('images/portfolios', 'public');
+            $data['image_path'] = $request->file('image')->store('images/portfolios', 'public_direct');
         }
 
         Portfolio::create($data);
@@ -155,10 +155,13 @@ class PortfolioController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            if ($portfolio->image_path && Storage::disk('public')->exists($portfolio->image_path)) {
-                Storage::disk('public')->delete($portfolio->image_path);
+            if ($portfolio->image_path && Storage::disk('public_direct')->exists($portfolio->image_path)) {
+                Storage::disk('public_direct')->delete($portfolio->image_path);
             }
-            $data['image_path'] = $request->file('image')->store('images/portfolios', 'public');
+            $data['image_path'] = $request->file('image')->store('images/portfolios', 'public_direct');
+        } else {
+            // Pertahankan image_path yang sudah ada jika tidak ada file baru
+            $data['image_path'] = $portfolio->image_path;
         }
 
         $portfolio->update($data);
@@ -173,8 +176,8 @@ class PortfolioController extends Controller
      */
     public function destroy(Portfolio $portfolio)
     {
-        if ($portfolio->image_path && Storage::disk('public')->exists($portfolio->image_path)) {
-            Storage::disk('public')->delete($portfolio->image_path);
+        if ($portfolio->image_path && Storage::disk('public_direct')->exists($portfolio->image_path)) {
+            Storage::disk('public_direct')->delete($portfolio->image_path);
         }
 
         $portfolio->delete();

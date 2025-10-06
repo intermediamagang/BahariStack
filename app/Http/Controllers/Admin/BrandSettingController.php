@@ -61,20 +61,26 @@ class BrandSettingController extends Controller
 
         // Handle logo upload
         if ($request->hasFile('logo')) {
-            if ($brandSetting->logo_path && Storage::disk('public')->exists($brandSetting->logo_path)) {
-                Storage::disk('public')->delete($brandSetting->logo_path);
+            if ($brandSetting->logo_path && Storage::disk('public_direct')->exists($brandSetting->logo_path)) {
+                Storage::disk('public_direct')->delete($brandSetting->logo_path);
             }
-            $logoPath = $request->file('logo')->store('images/logo', 'public');
+            $logoPath = $request->file('logo')->store('images/logos', 'public_direct');
             $data['logo_path'] = $logoPath;
+        } else {
+            // Pertahankan logo_path yang sudah ada jika tidak ada file baru
+            $data['logo_path'] = $brandSetting->logo_path;
         }
 
         // Handle favicon upload
         if ($request->hasFile('favicon')) {
-            if ($brandSetting->favicon_path && Storage::disk('public')->exists($brandSetting->favicon_path)) {
-                Storage::disk('public')->delete($brandSetting->favicon_path);
+            if ($brandSetting->favicon_path && Storage::disk('public_direct')->exists($brandSetting->favicon_path)) {
+                Storage::disk('public_direct')->delete($brandSetting->favicon_path);
             }
-            $faviconPath = $request->file('favicon')->store('images/logo', 'public');
+            $faviconPath = $request->file('favicon')->store('images/favicon', 'public_direct');
             $data['favicon_path'] = $faviconPath;
+        } else {
+            // Pertahankan favicon_path yang sudah ada jika tidak ada file baru
+            $data['favicon_path'] = $brandSetting->favicon_path;
         }
 
         // Handle social media
