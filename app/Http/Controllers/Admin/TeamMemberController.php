@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\TeamMember;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class TeamMemberController extends Controller
 {
@@ -38,7 +39,23 @@ class TeamMemberController extends Controller
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('photo')) {
-            $data['photo_path'] = $request->file('photo')->store('images/team', 'public');
+            $file = $request->file('photo');
+            $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+        
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('SUPABASE_KEY'),
+                'apikey' => env('SUPABASE_KEY'),
+                'Content-Type' => $file->getMimeType(),
+            ])->put(
+                env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_BUCKET') . '/' . $fileName,
+                file_get_contents($file->getPathname())
+            );
+        
+            if ($response->failed()) {
+                throw new \Exception('Upload ke Supabase gagal: ' . $response->body());
+            }
+        
+            $data['photo_path'] = env('SUPABASE_URL') . '/storage/v1/object/public/' . env('SUPABASE_BUCKET') . '/' . $fileName;
         }
 
         TeamMember::create($data);
