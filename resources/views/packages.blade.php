@@ -7,14 +7,14 @@
 <section class="relative py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.1\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"2\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        <div class="absolute inset-0" class="bg-gradient-to-r from-blue-500/10 to-cyan-500/10"></div>
     </div>
-    
+
     <!-- Floating Elements -->
     <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500 bg-opacity-20 rounded-full blur-xl"></div>
     <div class="absolute top-40 right-20 w-16 h-16 bg-cyan-400 bg-opacity-20 rounded-full blur-xl"></div>
     <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-indigo-500 bg-opacity-20 rounded-full blur-xl"></div>
-    
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <div class="max-w-4xl mx-auto">
             <div class="mb-6">
@@ -49,48 +49,53 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             @foreach($websitePackages as $package)
-            <div class="group relative">
-                <div class="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-4 border border-gray-100 relative overflow-hidden {{ $package->is_popular ? 'ring-4 ring-blue-500 scale-105' : '' }}">
-                    @if($package->is_popular)
-                    <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
-                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 text-sm font-bold px-8 py-3 rounded-full shadow-lg">
-                            <i class="fas fa-crown mr-2"></i>
-                            Terlaris
-                        </div>
+            <div class="group relative h-full">
+                @if($package->is_popular)
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 z-20
+            transition-transform duration-300 group-hover:-translate-y-4">
+                    <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 text-sm font-bold px-8 py-3 rounded-full shadow-xl ring-2 ring-white">
+                        <i class="fas fa-crown mr-2"></i> Terlaris
                     </div>
-                    @endif
-                    
-                    <!-- Background Pattern -->
+                </div>
+                @endif
+
+                <div class="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-4
+                  border border-gray-100 relative overflow-hidden flex flex-col h-full w-full
+                  {{ $package->is_popular ? 'ring-4 ring-blue-500' : '' }}">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-full -translate-y-16 translate-x-16 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div class="relative z-10">
+
+                    <div class="relative z-10 flex flex-col h-full">
                         <div class="text-center mb-8">
                             <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ $package->name }}</h3>
                             <p class="text-gray-600 mb-6 leading-relaxed">{{ $package->description }}</p>
-                            
                             <div class="mb-6">
                                 <span class="text-5xl font-bold text-blue-600">{{ $package->formatted_price }}</span>
                                 <span class="text-gray-500 text-sm block mt-2">Mulai dari</span>
                             </div>
                         </div>
-                        
-                        <ul class="space-y-4 mb-8">
-                            @foreach($package->features as $feature)
-                            <li class="flex items-start text-gray-600">
-                                <div class="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <i class="fas fa-check text-white text-xs"></i>
-                                </div>
-                                <span class="text-sm">{{ $feature }}</span>
-                            </li>
-                            @endforeach
-                        </ul>
-                        
-                        <a href="{{ route('contact') }}" class="w-full py-4 rounded-xl font-bold text-center block transition-all duration-300 {{ $package->is_popular ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                            <i class="fas fa-arrow-right mr-2"></i>
-                            Pilih Paket
-                        </a>
+
+                        <div class="flex-1 min-h-0">
+                            <ul class="space-y-4 mb-8">
+                                @foreach($package->features as $feature)
+                                <li class="flex items-start text-gray-600">
+                                    <div class="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
+                                        <i class="fas fa-check text-white text-xs"></i>
+                                    </div>
+                                    <span class="text-sm">{{ $feature }}</span>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        <div class="mt-auto">
+                            <a href="{{ route('contact') }}"
+                                class="w-full py-4 rounded-xl font-bold text-center block transition-all duration-300
+                      {{ $package->is_popular ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                                <i class="fas fa-arrow-right mr-2"></i> Pilih Paket
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,48 +120,55 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             @foreach($softwarePackages as $package)
-            <div class="group relative">
-                <div class="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-4 border border-gray-100 relative overflow-hidden {{ $package->is_popular ? 'ring-4 ring-green-500 scale-105' : '' }}">
-                    @if($package->is_popular)
-                    <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
-                        <div class="bg-gradient-to-r from-green-400 to-green-500 text-white text-sm font-bold px-8 py-3 rounded-full shadow-lg">
-                            <i class="fas fa-crown mr-2"></i>
-                            Terlaris
-                        </div>
+            <div class="group relative h-full">
+                @if($package->is_popular)
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 z-20
+            transition-transform duration-300 group-hover:-translate-y-4">
+                    <div class="bg-gradient-to-r from-green-400 to-green-500 text-white text-sm font-bold px-8 py-3 rounded-full shadow-xl ring-2 ring-white">
+                        <i class="fas fa-crown mr-2"></i> Terlaris
                     </div>
-                    @endif
-                    
-                    <!-- Background Pattern -->
+                </div>
+
+                @endif
+
+                <div class="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-4
+                  border border-gray-100 relative overflow-hidden flex flex-col h-full w-full
+                  {{ $package->is_popular ? 'ring-4 ring-green-500' : '' }}">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-50 to-emerald-50 rounded-full -translate-y-16 translate-x-16 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div class="relative z-10">
+
+                    <div class="relative z-10 flex flex-col h-full">
+                        {{-- header harga sama --}}
                         <div class="text-center mb-8">
                             <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ $package->name }}</h3>
                             <p class="text-gray-600 mb-6 leading-relaxed">{{ $package->description }}</p>
-                            
                             <div class="mb-6">
                                 <span class="text-5xl font-bold text-green-600">{{ $package->formatted_price }}</span>
                                 <span class="text-gray-500 text-sm block mt-2">Mulai dari</span>
                             </div>
                         </div>
-                        
-                        <ul class="space-y-4 mb-8">
-                            @foreach($package->features as $feature)
-                            <li class="flex items-start text-gray-600">
-                                <div class="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <i class="fas fa-check text-white text-xs"></i>
-                                </div>
-                                <span class="text-sm">{{ $feature }}</span>
-                            </li>
-                            @endforeach
-                        </ul>
-                        
-                        <a href="{{ route('contact') }}" class="w-full py-4 rounded-xl font-bold text-center block transition-all duration-300 {{ $package->is_popular ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                            <i class="fas fa-arrow-right mr-2"></i>
-                            Pilih Paket
-                        </a>
+
+                        <div class="flex-1 min-h-0">
+                            <ul class="space-y-4 mb-8">
+                                @foreach($package->features as $feature)
+                                <li class="flex items-start text-gray-600">
+                                    <div class="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
+                                        <i class="fas fa-check text-white text-xs"></i>
+                                    </div>
+                                    <span class="text-sm">{{ $feature }}</span>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        <div class="mt-auto">
+                            <a href="{{ route('contact') }}"
+                                class="w-full py-4 rounded-xl font-bold text-center block transition-all duration-300
+                      {{ $package->is_popular ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                                <i class="fas fa-arrow-right mr-2"></i> Pilih Paket
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -181,48 +193,53 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             @foreach($mobilePackages as $package)
-            <div class="group relative">
-                <div class="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-4 border border-gray-100 relative overflow-hidden {{ $package->is_popular ? 'ring-4 ring-purple-500 scale-105' : '' }}">
-                    @if($package->is_popular)
-                    <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
-                        <div class="bg-gradient-to-r from-purple-400 to-purple-500 text-white text-sm font-bold px-8 py-3 rounded-full shadow-lg">
-                            <i class="fas fa-crown mr-2"></i>
-                            Terlaris
-                        </div>
+            <div class="group relative h-full">
+                @if($package->is_popular)
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 z-20
+            transition-transform duration-300 group-hover:-translate-y-4">
+                    <div class="bg-gradient-to-r from-purple-400 to-purple-500 text-white text-sm font-bold px-8 py-3 rounded-full shadow-xl ring-2 ring-white">
+                        <i class="fas fa-crown mr-2"></i> Terlaris
                     </div>
-                    @endif
-                    
-                    <!-- Background Pattern -->
+                </div>
+                @endif
+
+                <div class="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-4
+                  border border-gray-100 relative overflow-hidden flex flex-col h-full w-full
+                  {{ $package->is_popular ? 'ring-4 ring-purple-500' : '' }}">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-50 to-violet-50 rounded-full -translate-y-16 translate-x-16 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div class="relative z-10">
+
+                    <div class="relative z-10 flex flex-col h-full">
                         <div class="text-center mb-8">
                             <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ $package->name }}</h3>
                             <p class="text-gray-600 mb-6 leading-relaxed">{{ $package->description }}</p>
-                            
                             <div class="mb-6">
                                 <span class="text-5xl font-bold text-purple-600">{{ $package->formatted_price }}</span>
                                 <span class="text-gray-500 text-sm block mt-2">Mulai dari</span>
                             </div>
                         </div>
-                        
-                        <ul class="space-y-4 mb-8">
-                            @foreach($package->features as $feature)
-                            <li class="flex items-start text-gray-600">
-                                <div class="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <i class="fas fa-check text-white text-xs"></i>
-                                </div>
-                                <span class="text-sm">{{ $feature }}</span>
-                            </li>
-                            @endforeach
-                        </ul>
-                        
-                        <a href="{{ route('contact') }}" class="w-full py-4 rounded-xl font-bold text-center block transition-all duration-300 {{ $package->is_popular ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
-                            <i class="fas fa-arrow-right mr-2"></i>
-                            Pilih Paket
-                        </a>
+
+                        <div class="flex-1 min-h-0">
+                            <ul class="space-y-4 mb-8">
+                                @foreach($package->features as $feature)
+                                <li class="flex items-start text-gray-600">
+                                    <div class="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
+                                        <i class="fas fa-check text-white text-xs"></i>
+                                    </div>
+                                    <span class="text-sm">{{ $feature }}</span>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
+                        <div class="mt-auto">
+                            <a href="{{ route('contact') }}"
+                                class="w-full py-4 rounded-xl font-bold text-center block transition-all duration-300
+                      {{ $package->is_popular ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}">
+                                <i class="fas fa-arrow-right mr-2"></i> Pilih Paket
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

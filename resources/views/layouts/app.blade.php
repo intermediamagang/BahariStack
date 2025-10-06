@@ -10,7 +10,10 @@
 
     <!-- Favicon -->
     @if($brandSetting->favicon_path ?? false)
-        <link rel="icon" type="image/x-icon" href="{{ asset($brandSetting->favicon_path) }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $brandSetting->favicon_path) }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('storage/' . $brandSetting->favicon_path) }}">
+    @else
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     @endif
 
     <!-- Fonts -->
@@ -138,7 +141,7 @@
                 <div class="flex items-center">
                     <a href="{{ route('home') }}" class="flex items-center space-x-3">
                         @if($brandSetting->logo_path ?? false)
-                            <img src="{{ asset($brandSetting->logo_path) }}" alt="{{ $brandSetting->company_name }}" class="h-10 w-auto">
+                            <img src="{{ asset('storage/' . $brandSetting->logo_path) }}" alt="{{ $brandSetting->company_name }}" class="h-10 w-auto">
                         @endif
                         <span class="text-xl font-bold ocean-text">{{ $brandSetting->company_name ?? 'BahariStack' }}</span>
                     </a>
@@ -189,7 +192,7 @@
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center space-x-3 mb-4">
                         @if($brandSetting->logo_path ?? false)
-                            <img src="{{ asset($brandSetting->logo_path) }}" alt="{{ $brandSetting->company_name }}" class="h-10 w-auto">
+                            <img src="{{ asset('storage/' . $brandSetting->logo_path) }}" alt="{{ $brandSetting->company_name }}" class="h-10 w-auto">
                         @endif
                         <span class="text-xl font-bold">{{ $brandSetting->company_name ?? 'BahariStack' }}</span>
                     </div>

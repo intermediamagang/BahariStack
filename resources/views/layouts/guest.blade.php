@@ -6,6 +6,17 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        
+        <!-- Favicon -->
+        @php
+            $brandSetting = \App\Models\BrandSetting::first();
+        @endphp
+        @if($brandSetting && $brandSetting->favicon_path)
+            <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $brandSetting->favicon_path) }}">
+            <link rel="shortcut icon" type="image/x-icon" href="{{ asset('storage/' . $brandSetting->favicon_path) }}">
+        @else
+            <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        @endif
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

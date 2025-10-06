@@ -7,14 +7,14 @@
 <section class="relative py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.1\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"2\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        <div class="absolute inset-0" class="bg-gradient-to-r from-blue-500/10 to-cyan-500/10"></div>
     </div>
-    
+
     <!-- Floating Elements -->
     <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500 bg-opacity-20 rounded-full blur-xl"></div>
     <div class="absolute top-40 right-20 w-16 h-16 bg-cyan-400 bg-opacity-20 rounded-full blur-xl"></div>
     <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-indigo-500 bg-opacity-20 rounded-full blur-xl"></div>
-    
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <div class="max-w-4xl mx-auto">
             <div class="mb-6">
@@ -37,42 +37,25 @@
 <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @if($teamMembers->count() > 0)
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+
+        @php
+        $count = $teamMembers->count();
+        $gridCols = 'grid-cols-1'; // base (mobile)
+
+        if ($count === 2) {
+        $gridCols .= ' sm:grid-cols-2 lg:grid-cols-2';
+        } elseif ($count === 3) {
+        $gridCols .= ' md:grid-cols-3 lg:grid-cols-3';
+        } elseif ($count === 4) {
+        $gridCols .= ' sm:grid-cols-2 lg:grid-cols-2'; // 2 kolom × 2 baris
+        } else {
+        $gridCols .= ' sm:grid-cols-2 lg:grid-cols-4'; // default
+        }
+        @endphp
+
+        <div class="grid {{ $gridCols }} gap-8 items-stretch">
             @foreach($teamMembers as $member)
-            <div class="group text-center">
-                <div class="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:-translate-y-3 border border-gray-100">
-                    @if($member->photo_path)
-                    <img src="{{ Storage::url($member->photo_path) }}" alt="{{ $member->name }}" class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-blue-100 group-hover:border-blue-500 transition-colors duration-300">
-                    @else
-                    <div class="w-32 h-32 rounded-full mx-auto mb-6 bg-gray-200 flex items-center justify-center text-gray-500 text-5xl">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                    @endif
-                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">{{ $member->name }}</h3>
-                    <p class="text-blue-600 font-semibold mb-4">{{ $member->position }}</p>
-                    @if($member->bio)
-                    <p class="text-gray-600 text-sm mb-4">{{ Str::limit($member->bio, 80) }}</p>
-                    @endif
-                    @if($member->skills && count($member->skills) > 0)
-                    <div class="mb-4">
-                        <div class="flex flex-wrap gap-2 justify-center">
-                            @foreach(array_slice($member->skills, 0, 3) as $skill)
-                            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full">{{ $skill }}</span>
-                            @endforeach
-                        </div>
-                    </div>
-                    @endif
-                    @if($member->social_links)
-                    <div class="flex justify-center space-x-4">
-                        @foreach($member->social_links as $platform => $url)
-                        <a href="{{ $url }}" target="_blank" class="text-gray-400 hover:text-blue-600 transition-colors duration-300">
-                            <i class="fab fa-{{ $platform }} text-lg"></i>
-                        </a>
-                        @endforeach
-                    </div>
-                    @endif
-                </div>
-            </div>
+            <x-team.card :member="$member" />
             @endforeach
         </div>
         @else
@@ -146,14 +129,14 @@
 <section class="relative py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.1\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"2\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        <div class="absolute inset-0" class="bg-gradient-to-r from-blue-500/10 to-cyan-500/10"></div>
     </div>
-    
+
     <!-- Floating Elements -->
     <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500 bg-opacity-20 rounded-full blur-xl"></div>
     <div class="absolute top-40 right-20 w-16 h-16 bg-cyan-400 bg-opacity-20 rounded-full blur-xl"></div>
     <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-indigo-500 bg-opacity-20 rounded-full blur-xl"></div>
-    
+
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <div class="mb-6">
             <span class="inline-flex items-center px-6 py-3 rounded-full text-sm font-semibold bg-white bg-opacity-10 backdrop-blur-sm border border-white border-opacity-20 text-white">
@@ -162,7 +145,7 @@
             </span>
         </div>
         <h2 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Siap Bekerja Sama dengan 
+            Siap Bekerja Sama dengan
             <span class="block bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                 Tim Kami?
             </span>
