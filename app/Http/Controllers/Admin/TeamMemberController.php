@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\TeamMember;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class TeamMemberController extends Controller
 {
@@ -39,7 +38,7 @@ class TeamMemberController extends Controller
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('photo')) {
-            $data['photo_path'] = $request->file('photo')->store('images/team', 'public_direct');
+            $data['photo_path'] = $request->file('photo')->store('images/team', 'public');
         }
 
         TeamMember::create($data);
@@ -72,16 +71,7 @@ class TeamMemberController extends Controller
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('photo')) {
-            // Hapus file lama jika ada
-            if ($teamMember->photo_path && Storage::disk('public_direct')->exists($teamMember->photo_path)) {
-                Storage::disk('public_direct')->delete($teamMember->photo_path);
-            }
-            
-            // Simpan file baru
-            $data['photo_path'] = $request->file('photo')->store('images/team', 'public_direct');
-        } else {
-            // Pertahankan photo_path yang sudah ada jika tidak ada file baru
-            $data['photo_path'] = $teamMember->photo_path;
+            $data['photo_path'] = $request->file('photo')->store('images/team', 'public');
         }
 
         $teamMember->update($data);
@@ -92,11 +82,6 @@ class TeamMemberController extends Controller
 
     public function destroy(TeamMember $teamMember)
     {
-        // Hapus file gambar jika ada
-        if ($teamMember->photo_path && Storage::disk('public_direct')->exists($teamMember->photo_path)) {
-            Storage::disk('public_direct')->delete($teamMember->photo_path);
-        }
-        
         $teamMember->delete();
         return redirect()->route('admin.team-members.index')
             ->with('success', 'Team member berhasil dihapus!');
