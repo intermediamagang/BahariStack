@@ -42,20 +42,32 @@ class TeamMemberController extends Controller
             $file = $request->file('photo');
             $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
         
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('SUPABASE_KEY'),
-                'apikey' => env('SUPABASE_KEY'),
-                'Content-Type' => $file->getMimeType(),
-            ])->put(
-                env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_BUCKET') . '/' . $fileName,
-                file_get_contents($file->getPathname())
-            );
+            $fileStream = fopen($file->getRealPath(), 'r');
+        
+            $response = Http::timeout(20) // batasi 20 detik biar gak lama
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . env('SUPABASE_KEY'),
+                    'apikey' => env('SUPABASE_KEY'),
+                    'Content-Type' => $file->getMimeType(),
+                ])
+                ->send('PUT',
+                    env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_BUCKET') . '/' . $fileName,
+                    ['body' => $fileStream]
+                );
+        
+            fclose($fileStream);
         
             if ($response->failed()) {
-                throw new \Exception('Upload ke Supabase gagal: ' . $response->body());
+                \Log::error('Supabase upload gagal', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+                throw new \Exception('Upload ke Supabase gagal. Cek log untuk detail.');
             }
         
-            $data['photo_path'] = env('SUPABASE_URL') . '/storage/v1/object/public/' . env('SUPABASE_BUCKET') . '/' . $fileName;
+            $data['photo_path'] = env('SUPABASE_URL')
+                . '/storage/v1/object/public/' . env('SUPABASE_BUCKET')
+                . '/' . $fileName;
         }
 
         TeamMember::create($data);
