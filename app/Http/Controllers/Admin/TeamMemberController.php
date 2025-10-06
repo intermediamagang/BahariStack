@@ -44,16 +44,15 @@ class TeamMemberController extends Controller
         
             $fileStream = fopen($file->getRealPath(), 'r');
         
-            $response = Http::timeout(20) // batasi 20 detik biar gak lama
+            $response = Http::timeout(10)
                 ->withHeaders([
                     'Authorization' => 'Bearer ' . env('SUPABASE_KEY'),
                     'apikey' => env('SUPABASE_KEY'),
                     'Content-Type' => $file->getMimeType(),
                 ])
-                ->send('PUT',
-                    env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_BUCKET') . '/' . $fileName,
-                    ['body' => $fileStream]
-                );
+                ->withBody(file_get_contents($file->getRealPath()), $file->getMimeType())
+                ->put(env('SUPABASE_URL') . '/storage/v1/object/' . env('SUPABASE_BUCKET') . '/' . $fileName);
+
         
             fclose($fileStream);
         
